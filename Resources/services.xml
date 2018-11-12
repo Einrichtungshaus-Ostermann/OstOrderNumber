@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://symfony.com/schema/dic/services"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+
+        <!-- configuration -->
+        <service id="ost_order_number.configuration" class="OstFoundation\Services\ConfigurationService">
+            <factory service="ost_foundation.services.configuration_service" method="getConfig"/>
+            <argument type="string">OstOrderNumber</argument>
+        </service>
+
+
+
+
+        <service id="ost_order_number.store_service" class="OstOrderNumber\Services\StoreService">
+        </service>
+
+
+
+
+        <!-- service decorators -->
+        <service id="ost_order_number.number_range_incrementer" class="OstOrderNumber\Listeners\Components\NumberRangeIncrementer" decorates="shopware.number_range_incrementer" public="false">
+            <argument type="service" id="ost_order_number.number_range_incrementer.inner"/>
+            <argument type="service" id="db"/>
+            <argument type="service" id="models"/>
+            <argument type="service" id="shopware.plugin.cached_config_reader"/>
+        </service>
+
+
+    </services>
+</container>

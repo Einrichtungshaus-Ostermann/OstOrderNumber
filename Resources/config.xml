@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../engine/Shopware/Components/Plugin/schema/config.xsd">
+    <elements>
+
+        <element type="button">
+            <name>defaultButton</name>
+            <label><![CDATA[<b>Allgemeine Einstellungen</b>]]></label>
+        </element>
+
+        <element type="boolean">
+            <name>status</name>
+            <label>Aktivieren</label>
+            <value>true</value>
+            <description>Soll das Plugin aktiviert werden?</description>
+        </element>
+
+
+
+        <element type="button">
+            <name>storeButton</name>
+            <label><![CDATA[<b>Betriebsstätte</b>]]></label>
+        </element>
+
+        <element type="boolean">
+            <name>storeApi</name>
+            <label>Via API</label>
+            <value>true</value>
+            <description>Soll die Betriebsstätte automatisch gelesen werden?</description>
+        </element>
+
+        <element type="text">
+            <name>storeManual</name>
+            <label>Manuelle Eingabe</label>
+            <value>01</value>
+            <description>Wenn die API deaktiviert ist, dann kann hier die Betriebsstätte manuell angegeben werden?</description>
+        </element>
+
+
+
+        <element type="button">
+            <name>scopeButton</name>
+            <label><![CDATA[<b>Sparte</b>]]></label>
+        </element>
+
+        <element type="text">
+            <name>scope</name>
+            <label>Manuelle Eingabe</label>
+            <value>0</value>
+            <description>Die Sparte der Bestellnummer.</description>
+        </element>
+
+    </elements>
+</config>
