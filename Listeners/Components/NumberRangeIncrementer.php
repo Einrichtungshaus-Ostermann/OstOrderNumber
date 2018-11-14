@@ -113,7 +113,7 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
 
 
 
-        $firstNumber = (string) $storeKeyInt . $scope . str_pad( "1", self::LENGTH - 1, "0", STR_PAD_LEFT );
+        $firstNumber = (string) $storeKeyInt . $scope . str_pad( "1", self::LENGTH, "0", STR_PAD_LEFT );
 
 
 
