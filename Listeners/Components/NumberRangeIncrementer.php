@@ -46,6 +46,14 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
     private $coreService;
 
 
+    /**
+     * The length of the order number running number.
+     *
+     * @var integer
+     */
+    CONST LENGTH = 6;
+
+
 
 
 
@@ -105,7 +113,7 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
 
 
 
-        $firstNumber = (string) $storeKeyInt . $scope . '0000001';
+        $firstNumber = (string) $storeKeyInt . $scope . str_pad( "1", self::LENGTH - 1, "0", STR_PAD_LEFT );
 
 
 
