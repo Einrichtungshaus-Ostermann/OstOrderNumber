@@ -15,8 +15,6 @@
             <description>Soll das Plugin aktiviert werden?</description>
         </element>
 
-
-
         <element type="button">
             <name>storeButton</name>
             <label><![CDATA[<b>Betriebsstätte</b>]]></label>
@@ -35,8 +33,6 @@
             <value>01</value>
             <description>Wenn die API deaktiviert ist, dann kann hier die Betriebsstätte manuell angegeben werden?</description>
         </element>
-
-
 
         <element type="button">
             <name>scopeButton</name>

@@ -1,5 +1,14 @@
 <?php declare(strict_types=1);
 
+/**
+ * Einrichtungshaus Ostermann GmbH & Co. KG - Order Number
+ *
+ * @package   OstOrderNumber
+ *
+ * @author    Eike Brandt-Warneke <e.brandt-warneke@ostermann.de>
+ * @copyright 2018 Einrichtungshaus Ostermann GmbH & Co. KG
+ * @license   proprietary
+ */
 namespace OstOrderNumber\Listeners\Components;
 
 use Enlight_Components_Db_Adapter_Pdo_Mysql as Db;
@@ -13,13 +22,18 @@ use Shopware\Models\Shop\Shop;
 class NumberRangeIncrementer implements NumberRangeIncrementerInterface
 {
     /**
+     * The length of the order number running number.
+     *
+     * @var int
+     */
+    const LENGTH = 6;
+
+    /**
      * ...
      *
      * @var Db
      */
     protected $db;
-
-
 
     /**
      * ...
@@ -28,8 +42,6 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
      */
     protected $modelManager;
 
-
-
     /**
      * ...
      *
@@ -37,26 +49,12 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
      */
     protected $cachedConfigReader;
 
-
     /**
      * The previously existing core service.
      *
      * @var NumberRangeIncrementerInterface
      */
     private $coreService;
-
-
-    /**
-     * The length of the order number running number.
-     *
-     * @var integer
-     */
-    CONST LENGTH = 6;
-
-
-
-
-
 
     /**
      * ...
@@ -74,8 +72,6 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
         $this->modelManager = $modelManager;
         $this->cachedConfigReader = $cachedConfigReader;
     }
-
-
 
     /**
      * {@inheritdoc}
@@ -100,10 +96,7 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
             return $this->coreService->increment($name);
         }
 
-
-
         $scope = $configuration['scope'];
-
 
         /* @var $storeService StoreServiceInterface */
         $storeService = Shopware()->Container()->get('ost_order_number.store_service');
@@ -111,13 +104,7 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
         $storeKey = $storeService->getKey();
         $storeKeyInt = (int) $storeKey;
 
-
-
-        $firstNumber = (string) $storeKeyInt . $scope . str_pad( "1", self::LENGTH, "0", STR_PAD_LEFT );
-
-
-
-
+        $firstNumber = (string) $storeKeyInt . $scope . str_pad('1', self::LENGTH, '0', STR_PAD_LEFT);
 
         // get invoice sub-name
         $shopName = 'invoice--store-' . $storeKey . '--scope-' . $scope;
@@ -135,8 +122,6 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
             $query = 'INSERT INTO s_order_number SET `number` = :number, `name` = :name, `desc` = :desc';
             $this->db->query($query, ['number' => $firstNumber, 'name' => $shopName, 'desc' => $desc]);
         }
-
-
 
         // get the number via core service
         return $this->coreService->increment($shopName);

@@ -11,14 +11,9 @@
             <argument type="string">OstOrderNumber</argument>
         </service>
 
-
-
-
+        <!-- services -->
         <service id="ost_order_number.store_service" class="OstOrderNumber\Services\StoreService">
         </service>
-
-
-
 
         <!-- service decorators -->
         <service id="ost_order_number.number_range_incrementer" class="OstOrderNumber\Listeners\Components\NumberRangeIncrementer" decorates="shopware.number_range_incrementer" public="false">
@@ -27,7 +22,6 @@
             <argument type="service" id="models"/>
             <argument type="service" id="shopware.plugin.cached_config_reader"/>
         </service>
-
 
     </services>
 </container>
