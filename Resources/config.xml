@@ -46,5 +46,24 @@
             <description>Die Sparte der Bestellnummer.</description>
         </element>
 
+        <element type="button">
+            <name>defaultNumberButton</name>
+            <label><![CDATA[<b>Standard Werte</b>]]></label>
+        </element>
+
+        <element type="text">
+            <name>defaultNumberkv</name>
+            <label>Kaufvertrag</label>
+            <value>100001</value>
+            <description>Die erste Bestellnummer für Kaufverträge. Wird automatisch generiert, falls kein Wert angegeben wurde.</description>
+        </element>
+
+        <element type="text">
+            <name>defaultNumberbv</name>
+            <label>Barverkauf</label>
+            <value>500001</value>
+            <description>Die erste Bestellnummer für Barverkäufe. Wird automatisch generiert, falls kein Wert angegeben wurde.</description>
+        </element>
+
     </elements>
 </config>

@@ -11,6 +11,9 @@
  * 1.0.1
  * - fixed plugin name
  *
+ * 1.1.0
+ * - added check for "barverkauf" and "kaufvertrag"
+ *
  * @package   OstOrderNumber
  *
  * @author    Eike Brandt-Warneke <e.brandt-warneke@ostermann.de>

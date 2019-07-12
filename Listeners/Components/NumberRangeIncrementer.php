@@ -18,6 +18,8 @@ use Shopware\Components\Model\ModelManager;
 use Shopware\Components\NumberRangeIncrementerInterface;
 use Shopware\Components\Plugin\CachedConfigReader;
 use Shopware\Models\Shop\Shop;
+use OstErpApi\Api\Api;
+use OstErpApi\Struct\Article;
 
 class NumberRangeIncrementer implements NumberRangeIncrementerInterface
 {
@@ -78,10 +80,8 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
      */
     public function increment($name)
     {
-        /* @var ContextServiceInterface $contextService */
-        $contextService = Shopware()->Container()->get('shopware_storefront.context_service');
-
         // set configuration
+        /** @var array $configuration */
         $configuration = Shopware()->Container()->get('ost_order_number.configuration');
 
         // even active?
@@ -96,18 +96,21 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
             return $this->coreService->increment($name);
         }
 
+        // get the scope via configuration
         $scope = $configuration['scope'];
 
         /* @var $storeService StoreServiceInterface */
         $storeService = Shopware()->Container()->get('ost_order_number.store_service');
 
+        // get the tore key
         $storeKey = $storeService->getKey();
         $storeKeyInt = (int) $storeKey;
 
-        $firstNumber = (string) $storeKeyInt . $scope . str_pad('1', self::LENGTH, '0', STR_PAD_LEFT);
+        // get the type
+        $type = $this->getType($storeKey);
 
         // get invoice sub-name
-        $shopName = 'invoice--store-' . $storeKey . '--scope-' . $scope;
+        $shopName = 'invoice--store-' . $storeKey . '--scope-' . $scope . '--type-' . strtolower($type);
 
         // check if the current number group is already set
         $query = "SELECT 1 FROM s_order_number WHERE name = '" . $shopName . "'";
@@ -115,8 +118,11 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
 
         // we have to set it first
         if ($valid === 0) {
+            // get the first number
+            $firstNumber = $this->getFirstNumber((string) $storeKeyInt, $scope, $type, $configuration);
+
             // create a description for this shop
-            $desc = 'Bestellungen - Store: ' . $storeKey . ' - Scope: ' . $scope;
+            $desc = 'Bestellungen - Store: ' . $storeKey . ' - Scope: ' . $scope . ' - Type: ' . $type;
 
             // insert order number
             $query = 'INSERT INTO s_order_number SET `number` = :number, `name` = :name, `desc` = :desc';
@@ -125,5 +131,104 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
 
         // get the number via core service
         return $this->coreService->increment($shopName);
+    }
+
+    /**
+     * ...
+     *
+     * @param string $storeKey
+     *
+     * @return string
+     */
+    private function getType($storeKey)
+    {
+        // get the basket content
+        $basket = Shopware()->Modules()->Order()->sBasketData;
+
+        // ...
+        $numbers = array();
+
+        // loop it
+        foreach ($basket['content'] as $article) {
+            if ((integer) $article['modus'] === 0) {
+                $numbers[] = $article['ordernumber'];
+            }
+        }
+
+        // everything in stock
+        $inStock = true;
+
+        /* @var $api Api */
+        $api = Shopware()->Container()->get('ost_erp_api.api');
+
+        // loop every article
+        foreach ($numbers as $number) {
+            /** @var Article $article */
+            $article = $api->findOneBy(
+                'article',
+                ['[article.number] = ' . $number]
+            );
+
+            // loop every stock
+            foreach ($article->getAvailableStock() as $stock) {
+                // the correct one?
+                if ($stock->getStore()->getKey() !== $storeKey) {
+                    // next
+                    continue;
+                }
+
+                // enough stock?
+                // ...
+
+                // all good
+                continue 2;
+            }
+
+            // this article does not have enough stoc
+            $inStock = false;
+
+            // and stop
+            break;
+        }
+
+        // not in stock?!
+        if ($inStock === false) {
+            // definitly this one
+            return "KV";
+        }
+        
+        // check for dispatch method
+        // ...
+
+        // this one
+        return "BV";
+    }
+
+    /**
+     * ...
+     *
+     * @param string $storeKey
+     * @param string $scope
+     * @param string $type
+     * @param array $configuration
+     *
+     * @return string
+     */
+    private function getFirstNumber($storeKey, $scope, $type, $configuration)
+    {
+        // set via configuration?
+        if (!empty($configuration['defaultNumber' . strtolower($type)])) {
+            // return with configuration
+            return $storeKey . $scope . str_pad((string) $configuration['defaultNumber' . strtolower($type)], self::LENGTH, '0', STR_PAD_LEFT);
+        }
+
+        // calculate first number
+        $firstNumber = $storeKey .
+            $scope .
+            ((strtolower($type) === "bv") ? "5" : "1") .
+            str_pad('1', self::LENGTH - 1, '0', STR_PAD_LEFT);
+
+        // return it
+        return $firstNumber;
     }
 }
