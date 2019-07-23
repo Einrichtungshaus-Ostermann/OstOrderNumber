@@ -14,6 +14,10 @@
  * 1.1.0
  * - added check for "barverkauf" and "kaufvertrag"
  *
+ * 1.1.1
+ * - added plugin configuration for cogito soap api dispatch attribute
+ * - fixed "barverkauf" / "kauvertrag" selection for selected dispatch method
+ *
  * @package   OstOrderNumber
  *
  * @author    Eike Brandt-Warneke <e.brandt-warneke@ostermann.de>

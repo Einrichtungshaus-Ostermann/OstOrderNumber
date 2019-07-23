@@ -65,5 +65,17 @@
             <description>Die erste Bestellnummer für Barverkäufe. Wird automatisch generiert, falls kein Wert angegeben wurde.</description>
         </element>
 
+        <element type="button">
+            <name>attributeShippingButton</name>
+            <label><![CDATA[<b>Attribute Zahlungs- / Versandarten</b>]]></label>
+        </element>
+
+        <element type="text">
+            <name>attributeSoapApiShipping</name>
+            <label>Zuordnung Versandart</label>
+            <value>ostcogitosoapapimapping</value>
+            <description>In welchem Attribut der Versandart steht die ID für die Cogito SOAP API?</description>
+        </element>
+
     </elements>
 </config>

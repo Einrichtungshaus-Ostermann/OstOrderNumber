@@ -20,6 +20,7 @@ use Shopware\Components\Plugin\CachedConfigReader;
 use Shopware\Models\Shop\Shop;
 use OstErpApi\Api\Api;
 use OstErpApi\Struct\Article;
+use Shopware\Bundle\AttributeBundle\Service\DataLoader as AttributeDataLoader;
 
 class NumberRangeIncrementer implements NumberRangeIncrementerInterface
 {
@@ -29,6 +30,13 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
      * @var int
      */
     const LENGTH = 6;
+
+    /**
+     * ...
+     *
+     * @var array
+     */
+    protected $barverkaufDispatches = array('02');
 
     /**
      * ...
@@ -107,8 +115,8 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
         $storeKeyInt = (int) $storeKey;
 
         // get the type
-        $type = $this->getType($storeKey);
-
+        $type = $this->getType($storeKey, $configuration);
+        
         // get invoice sub-name
         $shopName = 'invoice--store-' . $storeKey . '--scope-' . $scope . '--type-' . strtolower($type);
 
@@ -137,10 +145,11 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
      * ...
      *
      * @param string $storeKey
+     * @paray array $configuration
      *
      * @return string
      */
-    private function getType($storeKey)
+    private function getType($storeKey, array $configuration)
     {
         // get the basket content
         $basket = Shopware()->Modules()->Order()->sBasketData;
@@ -184,7 +193,7 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
                 continue 2;
             }
 
-            // this article does not have enough stoc
+            // this article does not have enough stock
             $inStock = false;
 
             // and stop
@@ -196,9 +205,24 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
             // definitly this one
             return "KV";
         }
-        
+
         // check for dispatch method
-        // ...
+        $dispatchId = Shopware()->Modules()->Order()->dispatchId;
+
+        /* @var $attributeDataLoader AttributeDataLoader */
+        $attributeDataLoader = Shopware()->Container()->get( "shopware_attribute.data_loader" );
+
+        // get attributes
+        $attributes = $attributeDataLoader->load( "s_premium_dispatch_attributes", $dispatchId );
+
+        // reset our attribute
+        $cogito = (string) $attributes[$configuration['attributeSoapApiShipping']];
+
+        // not barverkauf?
+        if (!in_array($cogito, $this->barverkaufDispatches)) {
+            // default
+            return "KV";
+        }
 
         // this one
         return "BV";
