@@ -18,8 +18,6 @@ use Shopware\Components\Model\ModelManager;
 use Shopware\Components\NumberRangeIncrementerInterface;
 use Shopware\Components\Plugin\CachedConfigReader;
 use Shopware\Models\Shop\Shop;
-use OstErpApi\Api\Api;
-use OstErpApi\Struct\Article;
 use Shopware\Bundle\AttributeBundle\Service\DataLoader as AttributeDataLoader;
 
 class NumberRangeIncrementer implements NumberRangeIncrementerInterface
@@ -151,6 +149,12 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
      */
     private function getType($storeKey, array $configuration)
     {
+        // no erp given?
+        if (Shopware()->Container()->initialized('ost_erp_api.api') === false) {
+            // default
+            return "KV";
+        }
+
         // get the basket content
         $basket = Shopware()->Modules()->Order()->sBasketData;
 
@@ -167,7 +171,7 @@ class NumberRangeIncrementer implements NumberRangeIncrementerInterface
         // everything in stock
         $inStock = true;
 
-        /* @var $api Api */
+        /* @var $api \OstErpApi\Api\Api */
         $api = Shopware()->Container()->get('ost_erp_api.api');
 
         // loop every article

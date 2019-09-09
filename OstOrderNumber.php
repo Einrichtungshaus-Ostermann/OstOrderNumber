@@ -18,6 +18,9 @@
  * - added plugin configuration for cogito soap api dispatch attribute
  * - fixed "barverkauf" / "kauvertrag" selection for selected dispatch method
  *
+ * 1.1.2
+ * - fixed dependency to ost-erp-api
+ *
  * @package   OstOrderNumber
  *
  * @author    Eike Brandt-Warneke <e.brandt-warneke@ostermann.de>
