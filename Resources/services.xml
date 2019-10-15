@@ -23,5 +23,11 @@
             <argument type="service" id="shopware.plugin.cached_config_reader"/>
         </service>
 
+        <!-- listeners -->
+        <service id="ost_order_number.listeners.controllers.frontend.register.post_dispatch" class="OstOrderNumber\Listeners\Controllers\Backend\CanceledOrder">
+            <argument type="service" id="ost_order_number.configuration"/>
+            <tag name="shopware.event_listener" method="onPostDispatch" event="Enlight_Controller_Action_PostDispatch_Backend_CanceledOrder" />
+        </service>
+
     </services>
 </container>

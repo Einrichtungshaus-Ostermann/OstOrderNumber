@@ -21,6 +21,9 @@
  * 1.1.2
  * - fixed dependency to ost-erp-api
  *
+ * 1.1.3
+ * - fixed order number for converting canceled orders
+ *
  * @package   OstOrderNumber
  *
  * @author    Eike Brandt-Warneke <e.brandt-warneke@ostermann.de>
